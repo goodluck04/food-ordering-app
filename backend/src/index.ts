@@ -12,7 +12,7 @@ mongoose.connect(process.env.DB_URI as string).then(() => {
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin:process.env.ORIGIN_URI
+  origin:"*"
 }));
 
 app.get("/test", async (req: Request, res: Response) => {
