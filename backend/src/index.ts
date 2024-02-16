@@ -11,7 +11,9 @@ mongoose.connect(process.env.DB_URI as string).then(() => {
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin:process.env.ORIGIN_URI
+}));
 
 app.get("/test", async (req: Request, res: Response) => {
   res.json({ message: "Hello!" });
