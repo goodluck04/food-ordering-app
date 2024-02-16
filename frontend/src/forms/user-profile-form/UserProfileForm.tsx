@@ -6,6 +6,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
+import { User } from "@/types";
+import { useEffect } from "react";
 
 const formSchema = z.object({
     email: z.string().optional(),
@@ -13,7 +15,7 @@ const formSchema = z.object({
     addressLine1: z.string().min(1, "Address Line 1 is required"),
     city: z.string().min(1, "City is required"),
     country: z.string().min(1, "Country is required"),
-  });
+});
 
 
 export type UserFormData = z.infer<typeof formSchema>;
@@ -23,12 +25,19 @@ export type UserFormData = z.infer<typeof formSchema>;
 type Props = {
     onSave: (userProfileData: UserFormData) => void;
     isLoading: boolean
+    currentUser: User
 }
 
-export default function UserProfileForm({ isLoading, onSave }: Props) {
+export default function UserProfileForm({ isLoading, onSave, currentUser }: Props) {
     const form = useForm<UserFormData>({
         resolver: zodResolver(formSchema),
+        defaultValues: currentUser
     });
+
+    useEffect(() => {
+        form.reset(currentUser);
+    }, [currentUser, form])
+
 
     return (
         <Form {...form}>
