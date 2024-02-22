@@ -19,7 +19,7 @@ export default function HomePage({ }: Props) {
                     Tuck into a takeaway today
                 </h1>
                 <span className='text-xl '>Food is just click away!</span>
-                <SearchBar placeHolder="Search by city or town" onSubmit={handleSearchSubmit} />
+                <SearchBar searchQuery="" placeHolder="Search by city or town" onSubmit={handleSearchSubmit} />
             </div>
 
             <div className='grid md:grid-cols-2 gap-5'>
