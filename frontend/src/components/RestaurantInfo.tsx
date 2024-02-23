@@ -2,11 +2,15 @@ import { Restaurant } from "@/types"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Dot } from "lucide-react";
 
+
 type Props = {
     restaurant: Restaurant;
 }
 
+
+
 export default function RestaurantInfo({ restaurant }: Props) {
+    
     return (
         <Card className="border-sla">
             <CardHeader>
