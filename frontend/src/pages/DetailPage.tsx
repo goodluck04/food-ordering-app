@@ -1,9 +1,10 @@
 import { useGetRestaurant } from '@/api/RetaurantApi';
+import CheckoutButton from '@/components/CheckoutButton';
 import MenuItemCard from '@/components/MenuItemCard';
 import OrderSummary from '@/components/OrderSummary';
 import RestaurantInfo from '@/components/RestaurantInfo';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Card } from '@/components/ui/card';
+import { Card, CardFooter } from '@/components/ui/card';
 import { MenuItem } from '@/types';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -17,7 +18,10 @@ export type CartItem = {
 
 export default function DetailPage() {
     const { restaurantId } = useParams();
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+        const storeCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
+        return storeCartItems ? JSON.parse(storeCartItems) : []
+    });
 
 
     const addToCart = (menuItem: MenuItem) => {
@@ -44,6 +48,11 @@ export default function DetailPage() {
                     }
                 ]
             }
+            // STORING LOCAL STORAGE
+            sessionStorage.setItem(
+                `cartItems-${restaurantId}`,
+                JSON.stringify(updatedCartItems)
+            )
             return updatedCartItems;
         })
     }
@@ -53,6 +62,11 @@ export default function DetailPage() {
             const updatedCartItems = prevCartItems.filter(
                 (item) => cartItem._id !== item._id
             );
+            // STORING LOCAL STORAGE
+            sessionStorage.setItem(
+                `cartItems-${restaurantId}`,
+                JSON.stringify(updatedCartItems)
+            )
             return updatedCartItems;
         })
     }
@@ -81,6 +95,9 @@ export default function DetailPage() {
                 <div>
                     <Card>
                         <OrderSummary restaurant={restaurant} cartItems={cartItems} removeFromCart={removeFromCart} />
+                        <CardFooter>
+                            <CheckoutButton />
+                        </CardFooter>
                     </Card>
                 </div>
             </div>
