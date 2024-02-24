@@ -1,3 +1,4 @@
+import { useCreateCheckoutSession } from '@/api/OrderApi';
 import { useGetRestaurant } from '@/api/RetaurantApi';
 import CheckoutButton from '@/components/CheckoutButton';
 import MenuItemCard from '@/components/MenuItemCard';
@@ -19,6 +20,9 @@ export type CartItem = {
 
 export default function DetailPage() {
     const { restaurantId } = useParams();
+    const { restaurant, isLoading } = useGetRestaurant(restaurantId);
+    const { createCheckoutSession, isLoading: isCheckoutLoading } = useCreateCheckoutSession();
+
     const [cartItems, setCartItems] = useState<CartItem[]>(() => {
         const storeCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
         return storeCartItems ? JSON.parse(storeCartItems) : []
@@ -72,11 +76,31 @@ export default function DetailPage() {
         })
     }
 
-    const { restaurant, isLoading } = useGetRestaurant(restaurantId);
 
 
-    const onCheckout = (userFormData:UserFormData) => {
-        console.log("userFormData", userFormData)
+    const onCheckout = async (userFormData: UserFormData) => {
+        if (!restaurant) {
+            return
+        }
+        const checkoutData = {
+            cartItems: cartItems.map((cartItem) => ({
+                menuItemId: cartItem._id,
+                name: cartItem.name,
+                quantity: cartItem.quantity.toString(),
+            })),
+            restaurantId: restaurant?._id,
+            deliveryDetails: {
+                name: userFormData.name,
+                addressLine1: userFormData.addressLine1,
+                country: userFormData.country,
+                city: userFormData.city,
+                email: userFormData.email as string
+            }
+        };
+
+        const data = await createCheckoutSession(checkoutData);
+    //    redirected to stripe url
+        window.location.href = data.url;
     }
 
     if (isLoading || !restaurant) {
@@ -102,7 +126,7 @@ export default function DetailPage() {
                     <Card>
                         <OrderSummary restaurant={restaurant} cartItems={cartItems} removeFromCart={removeFromCart} />
                         <CardFooter>
-                            <CheckoutButton disabled={cartItems.length === 0} onCheckout={onCheckout} />
+                            <CheckoutButton isLoading={isCheckoutLoading} disabled={cartItems.length === 0} onCheckout={onCheckout} />
                         </CardFooter>
                     </Card>
                 </div>
