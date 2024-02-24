@@ -25,10 +25,12 @@ export type UserFormData = z.infer<typeof formSchema>;
 type Props = {
     onSave: (userProfileData: UserFormData) => void;
     isLoading: boolean
-    currentUser: User
+    currentUser: User,
+    title?: string;
+    buttonText?: string;
 }
 
-export default function UserProfileForm({ isLoading, onSave, currentUser }: Props) {
+export default function UserProfileForm({ isLoading, onSave, currentUser, title = "User Profile", buttonText = "Submit" }: Props) {
     const form = useForm<UserFormData>({
         resolver: zodResolver(formSchema),
         defaultValues: currentUser
@@ -93,7 +95,7 @@ export default function UserProfileForm({ isLoading, onSave, currentUser }: Prop
                         </FormItem>
                     )} />
                 </div>
-                {isLoading ? <LoadingButton /> : <Button type="submit" className="bg-orange-500">Submit</Button>}
+                {isLoading ? <LoadingButton /> : <Button type="submit" className="bg-orange-500">{buttonText}</Button>}
             </form>
         </Form>
     )
