@@ -45,7 +45,7 @@ export default function UserProfileForm({ isLoading, onSave, currentUser, title 
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSave)} className="space-y-4 bg-gray-50 rounded-lg md:p-10">
                 <div>
-                    <h2 className="text-2xl font-bold">User Profile Form</h2>
+                    <h2 className="text-2xl font-bold">{title}</h2>
                     <FormDescription>View and Change ypur profile information</FormDescription>
                 </div>
                 <FormField control={form.control} name="email" render={({ field }) => (
