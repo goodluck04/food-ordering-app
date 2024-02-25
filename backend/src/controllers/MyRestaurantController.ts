@@ -96,11 +96,11 @@ const uploadImage = async (file: Express.Multer.File) => {
 };
 
 const getMyRestaurantOrders = async (req: Request, res: Response) => {
-  try {
-    const restaurant = await Restaurant.findOne({ user: req.userId });
+  try { 
 
+    const restaurant = await Restaurant.findOne({ user: req.userId });
     if (!restaurant) {
-      return res.status(400).json({ message: "restaurant not found" });
+      return res.status(404).json({ message: "restaurant not found" });
     }
 
     const orders = await Order.find({ restaurant: restaurant._id })
@@ -108,7 +108,8 @@ const getMyRestaurantOrders = async (req: Request, res: Response) => {
       .populate("user");
 
     res.json(orders);
-  } catch (error) {
+    
+  } catch (error) { 
     console.log(error);
     res.status(500).json({ message: "something went wrong" });
   }

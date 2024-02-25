@@ -52,7 +52,7 @@ export type Order = {
   totalAmount: number;
   status: OrderStatus;
   createdAt: string;
-  restaurantId: string;
+  restaurantId?: string;
 };
 
 export type RestaurantSearchResponse = {
