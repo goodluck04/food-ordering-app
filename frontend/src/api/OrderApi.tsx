@@ -8,7 +8,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const useGetMyOrders = () => {
     const { getAccessTokenSilently } = useAuth0();
 
-    const getMyOrdersRequest = async ():Promise<Order[]> => {
+    const getMyOrdersRequest = async (): Promise<Order[]> => {
         const accessToken = await getAccessTokenSilently();
 
         const response = await fetch(`${API_BASE_URL}/api/order`, {
@@ -24,7 +24,7 @@ export const useGetMyOrders = () => {
         return response.json();
     };
 
-    const { data: orders, isLoading } = useQuery("fetchMyOrders", getMyOrdersRequest);
+    const { data: orders, isLoading } = useQuery("fetchMyOrders", getMyOrdersRequest, { refetchInterval: 5000 });
 
     return { orders, isLoading }
 }
